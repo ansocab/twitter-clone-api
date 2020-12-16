@@ -12,6 +12,9 @@ exports.getOneUser = async function (req, res) {
     id,
   ]);
   const rows = single.rows;
+  if (!rows.length) {
+    return res.status(404).send("User with this ID does not exist");
+  }
   res.json(rows);
 };
 
@@ -21,13 +24,18 @@ exports.getOneUserMessages = async function (req, res) {
     id,
   ]);
   const rows = single.rows;
+  if (!rows.length) {
+    return res.status(404).send("User with this ID has no messages");
+  }
   res.json(rows);
 };
 
 exports.getRandomUser = async function (req, res) {
-    const random = await pool.query("SELECT * FROM twitteruser ORDER BY RANDOM() LIMIT 1");
-    const row = random.rows;
-    res.json(row);
+  const random = await pool.query(
+    "SELECT * FROM twitteruser ORDER BY RANDOM() LIMIT 1"
+  );
+  const row = random.rows;
+  res.json(row);
 };
 
 exports.createUser = async function (req, res) {
